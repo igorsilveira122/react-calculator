@@ -10,7 +10,7 @@ const Calculator = () => {
 
             <div className="Keypad">
                 <div className="Keypad-left">
-                    <Button size='big' value={'AC'} bg={'light'} />
+                    <Button size='big' value={'AC'} bg={'light'} operator />
                     <Button size='small' value={7} bg={'light'} />
                     <Button size='small' value={8} bg={'light'} />
                     <Button size='small' value={9} bg={'light'} />
@@ -26,11 +26,11 @@ const Calculator = () => {
                 </div>
 
                 <div className="Keypad-right">
-                    <Button size='small' value={'/'} bg={'dark'} />
-                    <Button size='small' value={'*'} bg={'dark'} />
-                    <Button size='small' value={'-'} bg={'dark'} />
-                    <Button size='small' value={'+'} bg={'dark'} />
-                    <Button size='small' value={'='} bg={'dark'} />
+                    <Button size='small' value={'/'} bg={'dark'} operator/>
+                    <Button size='small' value={'*'} bg={'dark'} operator/>
+                    <Button size='small' value={'-'} bg={'dark'} operator/>
+                    <Button size='small' value={'+'} bg={'dark'} operator/>
+                    <Button size='small' value={'='} bg={'dark'} operator/>
                 </div>
             </div>
         </div>
