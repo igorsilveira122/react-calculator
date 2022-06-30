@@ -8,16 +8,19 @@ export function CalcProvider({ children }) {
     const [value, setValue] = useState('0');
 
     function changeValue(newValue) {
-        if (value.includes('/') || value.includes('+') || value.includes('-') || value.includes('*')) {
-            setValue(value + newValue);
+        if (value.includes('/') ||
+            value.includes('+') ||
+            value.includes('-') ||
+            value.includes('*')) {
+            setValue(value + ' ' + newValue);
         }
         else {
             if (value != '0' && value.length >= 1) {
-                setValue(value + newValue);
+                setValue(value + ' ' + newValue);
             }
 
             else 
-                setValue(newValue + '');
+                setValue(newValue + ' ');
         }
     }
 
@@ -25,10 +28,40 @@ export function CalcProvider({ children }) {
         setValue('0');
     }
 
+    function sum(a, b) {
+        return parseInt(a) + parseInt(b);
+    }
+
+    function sub(a, b) {
+        return parseInt(a) - parseInt(b);
+    }
+
+    
 
     function calc() {
-        let parts = value.split('+')
-        setValue (parseInt(parts[0]) + parseInt(parts[1]) + '');
+        let parts = value.split(' ');
+        parts = parts.join('').split('');
+
+        let auxResult = '';
+
+        parts.map((part, index) => {
+            // console.log(`Posição: ${index}\nConteúdo: ${part}`);
+            if (part == '+') {
+                // auxResult = sum(index - 1, index + 1);
+                auxResult = (sum(parts[index - 1], parts[index + 1]));
+            }
+            if (part == '-') {
+                // auxResult = (sub(parts[index - 1], parts[index + 1]));
+            }
+
+        });
+
+        console.log(auxResult);
+
+        // console.log(parts);
+        
+        // setValue(sub(parts[0], parts[1]) + '');
+
     }
 
     function operation(operator) {
@@ -40,7 +73,7 @@ export function CalcProvider({ children }) {
         }
 
         else {
-            setValue(value + operator);
+            setValue(value + ' ' + operator);
         }
     }
 
