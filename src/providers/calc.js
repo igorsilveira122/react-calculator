@@ -1,87 +1,48 @@
-import { createContext, useState } from "react";
-import Button from "../Button/Button";
-import Display from "../Display/Display";
+import { createContext, useEffect, useState } from "react";
 
 export const CalcContext = createContext([]);
 
+const Parser = require('expr-eval').Parser;
+
 export function CalcProvider({ children }) {
-    const [value, setValue] = useState('0');
-
-    function changeValue(newValue) {
-        if (value.includes('/') ||
-            value.includes('+') ||
-            value.includes('-') ||
-            value.includes('*')) {
-            setValue(value + ' ' + newValue);
-        }
-        else {
-            if (value != '0' && value.length >= 1) {
-                setValue(value + ' ' + newValue);
-            }
-
-            else 
-                setValue(newValue + ' ');
-        }
-    }
+    const [display, setDisplay] = useState('0');
 
     function clean() {
-        setValue('0');
+        setDisplay('0');
     }
 
-    function sum(a, b) {
-        return parseInt(a) + parseInt(b);
+    function calculate() {
+        let expression = Parser.parse(display);
+        let result = expression.evaluate({ x: 1 });
+
+        setDisplay(result + '');
     }
 
-    function sub(a, b) {
-        return parseInt(a) - parseInt(b);
-    }
-
-    
-
-    function calc() {
-        let parts = value.split(' ');
-        parts = parts.join('').split('');
-
-        let auxResult = '';
-
-        parts.map((part, index) => {
-            // console.log(`Posição: ${index}\nConteúdo: ${part}`);
-            if (part == '+') {
-                // auxResult = sum(index - 1, index + 1);
-                auxResult = (sum(parts[index - 1], parts[index + 1]));
+    function input(buttonValue) {
+        if (buttonValue === 'AC') clean();
+        else if (buttonValue === '=') calculate();
+        else if (buttonValue === '+' || buttonValue === '-' ||
+                 buttonValue === '*' || buttonValue === '/') {
+            if ((display.length === 1 && display !== '0') || (display.length > 1)) {
+                if (display.slice(-1) !== ' ') {
+                    // Update display values
+                    setDisplay(display + ' ' + buttonValue + ' ');
+                }
             }
-            if (part == '-') {
-                // auxResult = (sub(parts[index - 1], parts[index + 1]));
-            }
-
-        });
-
-        console.log(auxResult);
-
-        // console.log(parts);
-        
-        // setValue(sub(parts[0], parts[1]) + '');
-
-    }
-
-    function operation(operator) {
-        if (operator == 'AC') {
-            clean();
         }
-        else if (operator == '=') {
-            calc()
-        }
-
         else {
-            setValue(value + ' ' + operator);
+            if (display.length === 1 && display === '0') {
+                setDisplay(buttonValue + '');
+            }
+            else {
+                setDisplay(display + buttonValue);
+            }
         }
     }
-
-
 
     return (
-        <CalcContext.Provider value={{ value, changeValue, operation }}>
+        <CalcContext.Provider value={{ display, input }}>
             {children}
         </CalcContext.Provider>
     );
-    }
+}
